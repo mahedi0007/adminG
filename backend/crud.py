@@ -1,9 +1,15 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
 from . import models
 from . import schemas
 
 # Category CRUD
 def create_category(db: Session, category: schemas.CategoryCreate):
+    existing = db.query(models.Category).filter(models.Category.name == category.name).first()
+    
+    if existing:
+        raise HTTPException(status_code=400, detail="Category already exists")
+    
     db_category = models.Category(name=category.name)
     db.add(db_category)
     db.commit()

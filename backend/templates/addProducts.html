@@ -6,7 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+
     <title>{{title}}</title>
 </head>
 
@@ -21,7 +22,7 @@
         <a href="/main">Dashboard</a>
         <a href="/addProducts">Add Products</a>
         <a href="#orders">Orders</a>
-        <a href="#">Categories</a>
+        <a href="/createCategories">Categories</a>
         <a href="#">Users</a>
         <a href="#">Profile</a>
     </div>
