@@ -94,18 +94,23 @@ def update_product(product_id: int, product: schemas.ProductUpdate, db: Session 
         raise HTTPException(status_code=404, detail="Product not found")
     return updated
 
-@app.delete("/products/{product_id}")
+@app.get("/products/delete/{product_id}")
 def delete_product(product_id: int, db: Session = Depends(get_db)):
     deleted = crud.delete_product(db, product_id)
-    if not deleted:
+    if deleted: 
+        return RedirectResponse(url="/main", status_code=303)
+    elif not deleted:
+          return {"products are not deleted!"}
+    else:
+          raise HTTPException(status_code=404, detail="products not found")
 
-        raise HTTPException(status_code=404, detail="Product not found")
-    return {"message": "Product deleted successfully"}
+
 
 # Main endpoint to display products
 @app.get("/main", response_class=HTMLResponse)
 async def main_products(request: Request, db: Session = Depends(get_db)):
     products = crud.get_products(db)
+    category = crud.get_categories(db)
     
     product_db = [
         {
@@ -119,9 +124,16 @@ async def main_products(request: Request, db: Session = Depends(get_db)):
             "product_quantity": product.quantity
         } for product in products
     ]
+
+    category_db =[
+        {
+            "category_id": category.id,
+            "category_name": category.name
+        } for category in category
+    ]
     
     
-    return Template.TemplateResponse("index.html", {"request": request, "products": product_db})
+    return Template.TemplateResponse("index.html", {"request": request, "products": product_db , "category_db": category_db})
 #create add products endpoint
 @app.get("/addProducts", response_class=HTMLResponse)
 async def add_products(request: Request):
@@ -158,8 +170,17 @@ async def add_product_form(
 
 #creating categories 
 @app.get("/createCategories", response_class=HTMLResponse)
-async def create_categories(request: Request):
-    return Template.TemplateResponse("createCategories.html", {"request": request})
+async def create_categories(request: Request , db :Session = Depends(get_db)):
+    category = crud.get_categories(db)
+
+    category_db =[
+        {
+            "category_id": category.id,
+            "category_name": category.name
+        } for category in category
+    ]
+
+    return Template.TemplateResponse("createCategories.html", {"request": request , "category_db": category_db})
 
 @app.post("/categories/add")
 async def add_category_form(
@@ -176,3 +197,21 @@ async def add_category_form(
     return RedirectResponse(url="/createCategories", status_code=303)
 
 
+
+#creating a delete category endpoint
+@app.get("/categories/delete/{category_id}")
+async def delete_category(category_id: int, db: Session = Depends(get_db)):
+    deleted = crud.delete_category(db, category_id)
+    if deleted: 
+        return RedirectResponse(url="/createCategories", status_code=303)
+    elif not deleted:
+        return {"category are not deleted!"}
+    else:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+#creating a delete product endpoint
+# @app.get("/products/delete/{product_id}")
+# async def delete_product(product_id: int, db: Session = Depends(get_db)):
+#     deleted = crud.delete_product(db, product_id)
+
+    

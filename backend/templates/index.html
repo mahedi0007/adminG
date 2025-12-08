@@ -60,7 +60,7 @@
                                 <td data-label="Qty">{{ product.product_quantity }}</td>
                                 <td data-label="Actions">
                                     <a href="#" class="edit">Edit</a>
-                                    <a href="#" class="delete">Delete</a>
+                                    <a class="delete" href="/products/delete/{{product.product_id}}" onclick="return confirm('are you sure to Delete Product ?')" >Delete</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -97,18 +97,26 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+                    {%if category_db %}
+                    {% for category in category_db %}
                     <tbody>
 
                         <tr>
-                            <td data-label="Categories ID">1</td>
-                            <td data-label="Categories Name">fruit</td>
+                            <td data-label="Categories ID">{{category.category_id}}</td>
+                            <td data-label="Categories Name">{{category.category_name}}</td>
                             <td data-label="Actions">
                                 <a class="edit">Edit</a>
-                                <a class="delete">Delete</a>
+                                <a class="delete" href="/categories/delete/{{category.category_id}}" onclick="return confirm('Are you sure?')">Delete</a>
 
                             </td>
                         </tr>
                     </tbody>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">No Categories found</td>
+                    </tr>
+                    {% endif %}
                 </table>
 
             </div>

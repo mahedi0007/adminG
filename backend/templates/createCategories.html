@@ -75,7 +75,7 @@ document.getElementById("categoriesForm").addEventListener("submit", async funct
             return;
         }
 
-        alert("Something went wrong!");
+        alert("category added successfully but something went wrong!");
     } 
     catch (err) {
         alert("Failed to connect server");
@@ -94,16 +94,56 @@ async function loadCategories(){
 // Load on page start
 loadCategories();
 </script>
-    <main>
+
             <!-- Categories view start  -->
-            <br>
+            <!-- <br>
+            <div class="content">
+                
             <h2>Categories</h2>
             <div class="table-container" id="categories">
                 <div id="categoryList">
-                    <!-- Categories will be loaded here dynamically -->
+                    Categories will be loaded here dynamically 
                 </div>
-            </div>
+            </div>  -->
             
+            <section class="content">
+               <h2>Categories List</h2>
+            <div class="table-container" id="Categories">
+
+                <table>
+                    <thead>
+
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    {%if category_db %}
+                    {% for category in category_db %}
+                    <tbody>
+
+                        <tr>
+                            <td data-label="Categories ID">{{category.category_id}}</td>
+                            <td data-label="Categories Name">{{category.category_name}}</td>
+                            <td data-label="Actions">
+                                <a class="edit">Edit</a>
+                                <a class="delete" href="/categories/delete/{{category.category_id}}" onclick="return confirm('Are you sure?')">Delete</a>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">No Categories found</td>
+                    </tr>
+                    {% endif %}
+                </table>
+
+            </div>
+        </section>
+            <!-- Categories view ends  -->
 
 </body>
 

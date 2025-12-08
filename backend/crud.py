@@ -19,6 +19,16 @@ def create_category(db: Session, category: schemas.CategoryCreate):
 def get_categories(db: Session):
     return db.query(models.Category).all()
 
+# crud.py
+def delete_category(db: Session, category_id: int):
+    category = db.query(models.Category).filter(models.Category.id == category_id).first()
+    if category:
+        db.delete(category)
+        db.commit()
+        return True
+    return False
+
+
 
 # Product CRUD
 def create_product(db: Session, product: schemas.ProductCreate):
